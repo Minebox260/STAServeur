@@ -48,11 +48,14 @@ void * handle_request(void * arg) {
     int car_id;
     char *ptr;
     char ip_client[MAXOCTETS+1];
+    char current_ip[MAXOCTETS+1];
     char resp[MAXOCTETS+1];
     int i;
     int id_ressource;
     request_t_data * data = (request_t_data *) arg;
     ptr = strtok(data->request, ":");
+    ip_client[0] = '\0';
+    sprintf(ip_client, "%s:%d", inet_ntoa(data->p_adr_client->sin_addr), ntohs(data->p_adr_client->sin_port));
   
     // Analyse du code de requête
     code = atoi(ptr);
@@ -60,8 +63,11 @@ void * handle_request(void * arg) {
     if (code == 101) { // Demande enregistrement
         i = 0;
         while (i < MAXVOITURES && cars_list[i] != NULL) { // On cherche le prochain emplacement de voiture libre
-          
-            if (!strcmp(ip_client, inet_ntoa(cars_list[i]->addr.sin_addr))) { // Si l'ip existe déjà
+
+            current_ip[0] = '\0';
+            sprintf(current_ip, "%s:%d", inet_ntoa(cars_list[i]->addr.sin_addr), ntohs(cars_list[i]->addr.sin_port));
+
+            if (!strcmp(ip_client, current_ip)) { // Si l'ip existe déjà
                 resp_code = 401;
                 break;
             }

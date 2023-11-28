@@ -8,6 +8,7 @@
     //  103 : Demander autorisation ressource       //
     //  104 : Demander libération ressource         //
     //  105 : Envoi de consigne                     //
+    //  106 : Besoin de consigne
     //                                              //
     //  REPONSES ACK                                //
     //  201 : Enregistrement effectué               //
@@ -34,6 +35,7 @@
     //////////////////////////////////////////////////
 
     #include <netinet/in.h>
+    #include <arpa/inet.h>
 
     typedef struct request_t_data {
         char * request;

@@ -81,8 +81,8 @@ void *user_menu(void *t_data) {
     printf("//      VOITURES CONNECTEES     //\n\n");
     for (i = 0; i < MAXVOITURES; i++) {
       if (cars_list[i] != NULL)
-        printf("[\033[0;32m%d\033[0;37m] | IP : %s | X : %d | Y : %d | Z : %d\n", i,
-               inet_ntoa(cars_list[i]->addr.sin_addr), cars_list[i]->pos_x,
+        printf("[\033[0;32m%d\033[0;37m] | IP : %s:%d | X : %d | Y : %d | Z : %d\n", i,
+               inet_ntoa(cars_list[i]->addr.sin_addr), ntohs(cars_list[i]->addr.sin_port), cars_list[i]->pos_x,
                cars_list[i]->pos_y, cars_list[i]->pos_z);
       else
         printf("[\033[0;31m-\033[0;37m] Non connectée\n");
