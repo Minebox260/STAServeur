@@ -8,7 +8,7 @@
     //  103 : Demander autorisation ressource       //
     //  104 : Demander libération ressource         //
     //  105 : Envoi de consigne                     //
-    //  106 : Besoin de consigne
+    //  106 : Besoin de consigne                    //
     //                                              //
     //  REPONSES ACK                                //
     //  201 : Enregistrement effectué               //
@@ -16,6 +16,7 @@
     //  203 : Autorisation d'accès accordée         //
     //  204 : Ressource libérée                     //
     //  205 : Consigne acquittée                    //
+    //  206 : Demande de consigne acquittée         //
     //                                              //
     // REPONSES NACK                                //
     // 401 : Déjà enregistré                        //

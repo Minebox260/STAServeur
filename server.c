@@ -80,11 +80,13 @@ void *user_menu(void *t_data) {
 
     printf("//      VOITURES CONNECTEES     //\n\n");
     for (i = 0; i < MAXVOITURES; i++) {
-      if (cars_list[i] != NULL)
-        printf("[\033[0;32m%d\033[0;37m] | IP : %s:%d | X : %d | Y : %d | Z : %d\n", i,
+      if (cars_list[i] != NULL) {
+        printf("[\033[0;32m%d\033[0;37m] | IP : %s:%d | X : %d | Y : %d | Z : %d", i,
                inet_ntoa(cars_list[i]->addr.sin_addr), ntohs(cars_list[i]->addr.sin_port), cars_list[i]->pos_x,
                cars_list[i]->pos_y, cars_list[i]->pos_z);
-      else
+        if (cars_list[i]->mission_required) printf(" \033[0;31m(AUCUNE MISSION)\033[0;37m");
+        printf("\n");
+      } else
         printf("[\033[0;31m-\033[0;37m] Non connectée\n");
     }
     printf("\n\n");
@@ -126,6 +128,7 @@ void handle_input(char *menu_input) {
       
       sprintf(send, "%d:%d:%d", 105, X, Y);
       send_data(send, cars_list[car_id]->addr);
+      cars_list[car_id]->mission_required = 0;
 
     } else
       printf("\nID Invalide\n");

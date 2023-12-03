@@ -81,6 +81,7 @@ void * handle_request(void * arg) {
             cars_list[i]->pos_x = 0;
             cars_list[i]->pos_y = 0;
             cars_list[i]->pos_z = 0;
+            cars_list[i]->mission_required = 0;
             resp_code = 201;
         }
         itoa(resp_code, resp);
@@ -148,6 +149,13 @@ void * handle_request(void * arg) {
                             } else resp_code = 406;
                         }
                     }
+                    itoa(resp_code, resp);
+                    break;
+                case 106: // Demande d'envoi de mission
+                
+                    cars_list[car_id]->mission_required = 1;
+                    resp_code = 206;
+                    
                     itoa(resp_code, resp);
                     break;
                 default:
