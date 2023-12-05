@@ -15,13 +15,25 @@ struct ressource *ressources_list[NBRESSOURCES] = {NULL};
 
 int sd;
 
+char * server_adr_str;
+
 int main(int argc, char *argv[]) {
   if (argc != 2)
     printf("SERVEUR | Utilisation : ./serveur <port serveur> \n");
   else {
+    printf("TEST");
     struct sockaddr_in server_adr; // Adresse du serveur
     pthread_t *tids;
     int erreur; // Gestion des erreurs
+    char hostbuffer[MAXOCTETS];
+    struct hostent *host_entry;
+    // To retrieve hostname
+    gethostname(hostbuffer, sizeof(hostbuffer));
+    strcat(hostbuffer, ".local");
+    // To retrieve host information
+    printf("%s", hostbuffer);
+    host_entry = gethostbyname(hostbuffer);
+    server_adr_str = inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[0]));
 
 
     printf("SERVEUR - Initialisation\n");
@@ -41,7 +53,7 @@ int main(int argc, char *argv[]) {
     // Préparation de l'adresse du serveur
     server_adr.sin_family = AF_INET;
     server_adr.sin_port = htons(atoi(argv[1]));
-    server_adr.sin_addr.s_addr = inet_addr("0.0.0.0");
+    server_adr.sin_addr.s_addr = inet_addr(server_adr_str);
 
     // Affectation de l'adresse au socket
     erreur = bind(sd, (const struct sockaddr *)&server_adr, sizeof(server_adr));
@@ -76,7 +88,8 @@ void *user_menu(void *t_data) {
            "//                              //\n"
            "//  SERVEUR VOITURES AUTONOMES  //\n"
            "//                              //\n"
-           "//////////////////////////////////\n\n\n");
+           "//////////////////////////////////\n\n"
+           "IP : \033[0;32m %s\033[0;37m\n\n", server_adr_str);
 
     printf("//      VOITURES CONNECTEES     //\n\n");
     for (i = 0; i < MAXVOITURES; i++) {

@@ -13,8 +13,9 @@
     #include <arpa/inet.h>
     #include <unistd.h>
     #include <pthread.h>
+    #include <netdb.h>
 
-    #define MAXOCTETS 150
+    #define MAXOCTETS 1024
     #define MAXVOITURES 2
     #define NBRESSOURCES 1
 
