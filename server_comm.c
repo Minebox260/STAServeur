@@ -134,6 +134,7 @@ void * handle_request(void * arg) {
                         }
                     }
                     itoa(resp_code, resp);
+                    sprintf(resp, ":%d", id_ressource);
                     break;
 
                 case 104: // Demande de libération  d'une ressource
@@ -151,6 +152,7 @@ void * handle_request(void * arg) {
                         }
                     }
                     itoa(resp_code, resp);
+                    sprintf(resp, ":%d", id_ressource);
                     break;
                 case 106: // Demande d'envoi de mission
                 
