@@ -55,26 +55,28 @@ void * handle_request(void * arg) {
     int id_ressource;
     request_t_data * data = (request_t_data *) arg;
     ptr = strtok(data->request, ":");
+
+    // Récupération de l'adresse IP + port de la voiture émittrice de la requête
     ip_client[0] = '\0';
     sprintf(ip_client, "%s:%d", inet_ntoa(data->p_adr_client->sin_addr), ntohs(data->p_adr_client->sin_port));
   
     // Analyse du code de requête
     code = atoi(ptr);
     
-    if (code == 101) { // Demande enregistrement
+    if (code == 101) { // 101 : Demande d'enregistrement
         i = 0;
         while (i < MAXVOITURES && cars_list[i] != NULL) { // On cherche le prochain emplacement de voiture libre
 
             current_ip[0] = '\0';
             sprintf(current_ip, "%s:%d", inet_ntoa(cars_list[i]->addr.sin_addr), ntohs(cars_list[i]->addr.sin_port));
 
-            if (!strcmp(ip_client, current_ip)) { // Si l'ip existe déjà
+            if (!strcmp(ip_client, current_ip)) { // Si à un moment, on trouve la même ip, alors la voiture est déjà enregistrée
                 resp_code = 401;
                 break;
             }
             else i++;
         }
-        if (i == MAXVOITURES) { // Si plus de place
+        if (i == MAXVOITURES) { // Si tous les emplacements de voiture sont déjà attribués, renvoi d'erreur
             resp_code = 402;
         } else if (resp_code != 401) { // Si on a trouvé un emplacement libre
             cars_list[i] = (struct car *)malloc(sizeof(car));
@@ -88,13 +90,13 @@ void * handle_request(void * arg) {
         itoa(resp_code, resp);
     } 
     else { // Autres demandes : la voiture doit être enregistrée
-        car_id = get_car_id(ip_client);
-        if (car_id == -1) { // On vérifie si la voiture est enregistrée et on récupère l'ID
+        car_id = get_car_id(ip_client); // On récupère la position dans l'array des voitures de la voiture correspondant à cette adresse
+        if (car_id == -1) { // On vérifie si la voiture est enregistrée 
             resp_code = 403;
             itoa(resp_code, resp);
         } else {
             switch(code) {
-                case 102: // Réception de rapport de position
+                case 102: // 102 : Réception d'un rapport de position
                     resp_code = 202;
 
                     ptr = strtok(NULL, ":"); // On parse la pos X
@@ -116,18 +118,18 @@ void * handle_request(void * arg) {
                     itoa(resp_code, resp);
                     break;
 
-                case 103: // Demande d'accès à une ressource
+                case 103: // 103 : Demande d'accès à une ressource
                     ptr = strtok(NULL, ":");
                     if (strlen(ptr)==0) resp_code = 500;
                     else {
                         id_ressource = atoi(ptr);
-                        if (id_ressource < 0 || id_ressource >= NBRESSOURCES) resp_code = 500;
+                        if (id_ressource < 0 || id_ressource >= NBRESSOURCES) resp_code = 500; // On vérifie que l'ID demandée existe
                         else {
-                            if (ressources_list[id_ressource]->reserved) {
-                                if (ressources_list[id_ressource]->car_id == car_id) resp_code = 407;
+                            if (ressources_list[id_ressource]->reserved) { // On vérifie si la ressource est déjà reservée 
+                                if (ressources_list[id_ressource]->car_id == car_id) resp_code = 407; // Si c'est le cas, on vérifie aussi si c'est la même voiture
                                 else resp_code = 405;
                             } else {
-                                resp_code = 203;
+                                resp_code = 203; // On réserve la ressource
                                 ressources_list[id_ressource]->reserved = 1;
                                 ressources_list[id_ressource]->car_id = car_id;
                             }
@@ -137,14 +139,14 @@ void * handle_request(void * arg) {
                     sprintf(resp, ":%d", id_ressource);
                     break;
 
-                case 104: // Demande de libération  d'une ressource
+                case 104: // 104 : Demande de libération  d'une ressource
                     ptr = strtok(NULL, ":");
                     if (strlen(ptr)==0) resp_code = 500;
                     else {
                         id_ressource = atoi(ptr);
-                        if (id_ressource < 0 || id_ressource >= NBRESSOURCES) resp_code = 500;
+                        if (id_ressource < 0 || id_ressource >= NBRESSOURCES) resp_code = 500; // On vérifie que l'ID demandée existe
                         else {
-                            if (ressources_list[id_ressource]->reserved && ressources_list[id_ressource]->car_id == car_id) {
+                            if (ressources_list[id_ressource]->reserved && ressources_list[id_ressource]->car_id == car_id) { // On vérifie que la ressource est réservée par cette voiture
                                 resp_code = 204;
                                 ressources_list[id_ressource]->reserved = 0;
                                 ressources_list[id_ressource]->car_id = -1;
@@ -154,14 +156,14 @@ void * handle_request(void * arg) {
                     itoa(resp_code, resp);
                     sprintf(resp, ":%d", id_ressource);
                     break;
-                case 106: // Demande d'envoi de mission
+                case 106: // 105 : Demande d'envoi de mission
                 
                     cars_list[car_id]->mission_required = 1;
                     resp_code = 206;
                     
                     itoa(resp_code, resp);
                     break;
-                default:
+                default: // Autres cas : mauvais requête
                     resp_code = 500;
                     itoa(resp_code, resp);
                     break;
