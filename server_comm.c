@@ -163,6 +163,8 @@ void * handle_request(void * arg) {
                     
                     itoa(resp_code, resp);
                     break;
+                case 205:
+                    break;
                 default: // Autres cas : mauvais requête
                     resp_code = 500;
                     itoa(resp_code, resp);
