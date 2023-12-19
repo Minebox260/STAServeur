@@ -172,6 +172,6 @@ void * handle_request(void * arg) {
     }
   
   // On envoie la réponse
-  send_data(resp, *data->p_adr_client);
+  if (resp_code != 0) send_data(resp, *data->p_adr_client);
   pthread_exit(NULL);
 }
