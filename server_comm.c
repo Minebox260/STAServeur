@@ -55,12 +55,13 @@ void * handle_request(void * arg) {
     int id_ressource;
     request_t_data * data = (request_t_data *) arg;
 
-    printf("Received request from %s: %s\n", ip_client, data->request);
+    
     
     // Récupération de l'adresse IP + port de la voiture émittrice de la requête
     ip_client[0] = '\0';
     sprintf(ip_client, "%s:%d", inet_ntoa(data->p_adr_client->sin_addr), ntohs(data->p_adr_client->sin_port));
   
+    printf("Received request from %s: %s\n", ip_client, data->request);
     ptr = strtok(data->request, ":");
 
     // Analyse du code de requête
