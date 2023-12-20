@@ -38,7 +38,7 @@ void * receive_data(void * arg) {
 
 void * send_data(char data[MAXOCTETS+1], struct sockaddr_in adr_client) {
     int nbcar;
-    printf("Sent %s", data);
+    printf("Sent %s\n", data);
     nbcar=sendto(sd, data,strlen(data) + 1,0,(const struct sockaddr *) &adr_client,sizeof(adr_client));
     CHECK_ERROR(nbcar,0,"\nErreur lors de l'émission des données");
     return EXIT_SUCCESS;
@@ -140,8 +140,7 @@ void * handle_request(void * arg) {
                             }
                         }
                     }
-                    itoa(resp_code, resp);
-                    sprintf(resp, ":%d", id_ressource);
+                    sprintf(resp, "%d:%d", resp_code, id_ressource);
                     break;
 
                 case 104: // 104 : Demande de libération  d'une ressource
@@ -158,8 +157,7 @@ void * handle_request(void * arg) {
                             } else resp_code = 406;
                         }
                     }
-                    itoa(resp_code, resp);
-                    sprintf(resp, ":%d", id_ressource);
+                    sprintf(resp, "%d:%d", resp_code, id_ressource);
                     break;
                 case 106: // 105 : Demande d'envoi de mission
                 
