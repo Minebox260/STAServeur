@@ -107,7 +107,7 @@ void *user_menu(void *t_data) {
     printf("\n\n");
     printf("//            RESSOURCES           //\n\n");
     for (i = 0; i < NBRESSOURCES; i++) {
-      if (!ressources_list[i]->reserved) {
+      if (ressources_list[i]->reserved) {
         printf("[\033[0;32m%d\033[0;37m] | Reservée par : %d (%s:%d)", i,
               ressources_list[i]->car_id,
                inet_ntoa(cars_list[ressources_list[i]->car_id]->addr.sin_addr), ntohs(cars_list[ressources_list[i]->car_id]->addr.sin_port));
