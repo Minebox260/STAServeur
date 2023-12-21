@@ -36,10 +36,10 @@ void * receive_data(void * arg) {
     }
 }
 
-void * send_data(char data[MAXOCTETS+1], struct sockaddr_in adr_client) {
+void * send_data(char * data, struct sockaddr_in adr_client) {
     int nbcar;
     printf("Sent %s\n", data);
-    nbcar=sendto(sd, data,strlen(data) + 1,0,(const struct sockaddr *) &adr_client,sizeof(adr_client));
+    nbcar=sendto(sd, data,MAXOCTETS + 1,0,(const struct sockaddr *) &adr_client,sizeof(adr_client));
     CHECK_ERROR(nbcar,0,"\nErreur lors de l'émission des données");
     return EXIT_SUCCESS;
 }
