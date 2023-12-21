@@ -38,7 +38,7 @@ void * receive_data(void * arg) {
 
 void * send_data(char * data, struct sockaddr_in adr_client) {
     int nbcar;
-    printf("Sent %s\n", data);
+    //printf("Sent %s\n", data);
     nbcar=sendto(sd, data,MAXOCTETS + 1,0,(const struct sockaddr *) &adr_client,sizeof(adr_client));
     CHECK_ERROR(nbcar,0,"\nErreur lors de l'émission des données");
     return EXIT_SUCCESS;
@@ -62,7 +62,7 @@ void * handle_request(void * arg) {
     ip_client[0] = '\0';
     sprintf(ip_client, "%s:%d", inet_ntoa(data->p_adr_client->sin_addr), ntohs(data->p_adr_client->sin_port));
   
-    printf("Received request from %s: %s\n", ip_client, data->request);
+    //printf("Received request from %s: %s\n", ip_client, data->request);
     ptr = strtok(data->request, ":");
 
     // Analyse du code de requête
