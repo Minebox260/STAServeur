@@ -29,10 +29,10 @@ int main(int argc, char *argv[]) {
     struct hostent *host_entry;
 
     // Récupération de l'adresse IP de la machine
-    // To retrieve hostname
+
     gethostname(hostbuffer, sizeof(hostbuffer));
     strcat(hostbuffer, ".local");
-    // To retrieve host information
+    
     host_entry = gethostbyname(hostbuffer);
     server_adr_str = inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[0]));
 
